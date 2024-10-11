@@ -2,14 +2,14 @@
 from heapq import *
 
 class TestMinPriorityQueue:
-    def __init__(self):
+    def __init__(self) -> None:
         self.data = []
-    def make_queue(self, dist):
+    def make_queue(self, dist) -> None:
         for key in dist.keys():
             heappush(self.data, (dist[key], key))
-    def pop_min(self):
+    def pop_min(self) -> tuple[float, int]:
         return heappop(self.data)
-    def update_key(self, vertex, value):
+    def update_key(self, vertex, value) -> None:
         # O(n) operation only for testing purposes
         for i in range(len(self.data)):
             if self.data[i][1] == vertex:
@@ -19,7 +19,7 @@ class TestMinPriorityQueue:
 ###########################################################
 
 class ArrayMinPriorityQueue:
-    def __init__(self):
+    def __init__(self) -> None:
         self.data = {}
     def make_queue(self, dist) -> None:
         self.data = dist.copy()
