@@ -30,19 +30,52 @@ class ArrayMinPriorityQueue:
         self.data[vertex] = value
 
 
-def dijkstra(graph: dict[int, dict[int, float]], start: int, heap_type: str) -> dict[int, float]:
+class HeapMinPriorityQueue:
+    def __init__(self):
+        self.data = []
+        self.pointers = {}  # of form {vertex: index in data}
+    def make_queue(self, dist) -> None:
+        for key in dist.keys():
+            # insert procedure
+            self.data.append((dist[key], key))
+            self.pointers[key] = len(self.data) - 1
+            curr = len(self.data) - 1
+            while self.data[curr] < self.data[self.parent(curr)]:
+                self.swap(curr, self.parent(curr))
+                curr = self.parent(curr)
+    def pop_min(self) -> tuple[float, int]:
+        pass
+    def update_key(self, vertex, value) -> None:
+        pass
+    
+    def swap(self, index1: int, index2: int) -> None:
+        self.data[index1], self.data[index2] = self.data[index2], self.data[index1]
+        self.pointers[self.data[index1][1]], self.pointers[self.data[index2][1]] = self.pointers[self.data[index2][1]], self.pointers[self.data[index1][1]]
+    def parent(self, index: int) -> int:
+        return index // 2
+    def left(self, index: int) -> int:
+        return 2 * index
+    def right(self, index: int) -> int:
+        return (2 * index) + 1
+
+
+def dijkstra(graph: dict[int, dict[int, float]], start: int, pq_type: str) -> dict[int, float]:
     dist = {}
     prev = {}
     for vertex in graph.keys():
         dist[vertex] = float('inf')
         prev[vertex] = None
     dist[start] = 0
-    if heap_type == "test":
+
+    if pq_type == "test":
         H = TestMinPriorityQueue()
-    elif heap_type == "array":
+    elif pq_type == "array":
         H = ArrayMinPriorityQueue()
+    elif pq_type == "heap":
+        H = HeapMinPriorityQueue()
     else:
-        raise NotImplementedError(f"No such heap type: {heap_type}")
+        raise NotImplementedError(f"No such heap type: {pq_type}")
+    
     H.make_queue(dist)
     while H.data:
         u = H.pop_min()[1]
@@ -61,7 +94,7 @@ def assemble_path(prev: dict[int, int], start: int, end: int) -> list[int]:
         path.append(curr)
         curr = prev[curr]
     path.append(start)
-    return list(reversed(path))  # TODO: check time complexity
+    return list(reversed(path))  # O(V) operation, shouldn't cause any issues
 
 
 def find_shortest_path_with_heap(
@@ -97,3 +130,15 @@ def find_shortest_path_with_array(
     """
     dist, prev = dijkstra(graph, source, "array")
     return (assemble_path(prev, source, target), dist[target])
+
+# tests
+testQueue = TestMinPriorityQueue()
+arrayQueue = ArrayMinPriorityQueue()
+heapQueue = HeapMinPriorityQueue()
+test_data = {0: .5, 1: .4, 2: .3, 3: .2, 4: .1}
+testQueue.make_queue(test_data)
+arrayQueue.make_queue(test_data)
+heapQueue.make_queue(test_data)
+print("test:", testQueue.data)
+print("heap:", heapQueue.data)
+print("ref:", heapQueue.pointers)
