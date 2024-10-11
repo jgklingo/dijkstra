@@ -18,6 +18,18 @@ class TestMinPriorityQueue:
 
 ###########################################################
 
+class ArrayMinPriorityQueue:
+    def __init__(self):
+        self.data = {}
+    def make_queue(self, dist) -> None:
+        self.data = dist.copy()
+    def pop_min(self) -> tuple[float, int]:
+        min_element = min(self.data, key=lambda x: self.data[x])
+        return (self.data.pop(min_element), min_element)
+    def update_key(self, vertex, value) -> None:
+        self.data[vertex] = value
+
+
 def dijkstra(graph: dict[int, dict[int, float]], start: int, heap_type: str) -> dict[int, float]:
     dist = {}
     prev = {}
@@ -27,6 +39,8 @@ def dijkstra(graph: dict[int, dict[int, float]], start: int, heap_type: str) -> 
     dist[start] = 0
     if heap_type == "test":
         H = TestMinPriorityQueue()
+    elif heap_type == "array":
+        H = ArrayMinPriorityQueue()
     else:
         raise NotImplementedError(f"No such heap type: {heap_type}")
     H.make_queue(dist)
@@ -81,5 +95,5 @@ def find_shortest_path_with_array(
         - the list of nodes (including `source` and `target`)
         - the cost of the path
     """
-    dist, prev = dijkstra(graph, source, "test")
+    dist, prev = dijkstra(graph, source, "array")
     return (assemble_path(prev, source, target), dist[target])
