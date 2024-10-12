@@ -44,7 +44,17 @@ class HeapMinPriorityQueue:
                 self.swap(curr, self.parent(curr))
                 curr = self.parent(curr)
     def pop_min(self) -> tuple[float, int]:
-        pass
+        self.swap(0, len(self.data) - 1)
+        minimum = self.data.pop()
+        curr = 0
+        while (self.left(curr) < len(self.data) and (self.data[curr] > self.data[self.left(curr)]) or self.right(curr) < len(self.data) and self.data[curr] > self.data[self.right(curr)]):
+            if self.data[self.left(curr)] < self.data[self.right(curr)]:
+                self.swap(curr, self.left(curr))
+                curr = self.left(curr)
+            else:
+                self.swap(curr, self.right(curr))
+                curr = self.right(curr)
+        return minimum
     def update_key(self, vertex, value) -> None:
         pass
     
@@ -142,3 +152,6 @@ heapQueue.make_queue(test_data)
 print("test:", testQueue.data)
 print("heap:", heapQueue.data)
 print("ref:", heapQueue.pointers)
+while testQueue.data:
+    print("test:", testQueue.pop_min())
+    print("heap:", heapQueue.pop_min())
