@@ -65,7 +65,6 @@ def main(seed: int, size: int, density: float, noise: float, source: int, target
     path, cost = find_shortest_path_with_heap(weights, source, target)
     end = time()
     heap_time = end - start
-    print()
     print('-- Heap --')
     print('Path:', path)
     print('Cost:', cost)
@@ -77,11 +76,11 @@ def main(seed: int, size: int, density: float, noise: float, source: int, target
     path, cost = find_shortest_path_with_array(weights, source, target)
     end = time()
     array_time = end - start
-    print()
     print('-- Array --')
     print('Path:', path)
     print('Cost:', cost)
     print('Time:', array_time)
+    print()
 
     title(f'Cost: {cost}, Heap: {round(heap_time, 4)}, Array: {round(array_time, 4)}')
     show_plot()
@@ -90,8 +89,8 @@ def main(seed: int, size: int, density: float, noise: float, source: int, target
 if __name__ == '__main__':
     # To debug or run in your IDE
     # you can uncomment the lines below and modify the arguments as needed
-    import sys
-    sys.argv = ['main.py', '-n', '10', '--seed', '312', '--density', '0.3', '--noise', '0.05', '--debug']
+    # import sys
+    # sys.argv = ['main.py', '-n', '10', '--seed', '312', '--density', '0.3', '--noise', '0.05']
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', type=int, help='The number of points to generate', default=10)
@@ -119,5 +118,5 @@ if __name__ == '__main__':
     main(args.seed, args.n, args.density, args.noise, args.source, args.target)
 
     # You can use a loop like the following to generate data for your tables:
-    # for n in [100, 200, 400, 800, 1600, 3200, 6400]:
-    #     main(312, n, 1, 0.05, 2, 9)
+    for n, d in [(1000, 1), (2000, 1), (3000, 1), (4000, 1), (5000, 1), (6000, 1)]:
+        main(312, n, d, 0.02, 2, 9)

@@ -1,20 +1,20 @@
-# this code is only for testing, remove before submission #
-from heapq import *
+# this code is only for testing, comment before submission #
+# from heapq import *
 
-class TestMinPriorityQueue:
-    def __init__(self) -> None:
-        self.data = []
-    def make_queue(self, dist) -> None:
-        for key in dist.keys():
-            heappush(self.data, (dist[key], key))
-    def pop_min(self) -> tuple[float, int]:
-        return heappop(self.data)
-    def decrease_key(self, vertex, value) -> None:
-        # O(n) operation only for testing purposes
-        for i in range(len(self.data)):
-            if self.data[i][1] == vertex:
-                self.data[i] = (value, vertex)
-        heapify(self.data)
+# class TestMinPriorityQueue:
+#     def __init__(self) -> None:
+#         self.data = []
+#     def make_queue(self, dist) -> None:
+#         for key in dist.keys():
+#             heappush(self.data, (dist[key], key))
+#     def pop_min(self) -> tuple[float, int]:
+#         return heappop(self.data)
+#     def decrease_key(self, vertex, value) -> None:
+#         # O(n) operation only for testing purposes
+#         for i in range(len(self.data)):
+#             if self.data[i][1] == vertex:
+#                 self.data[i] = (value, vertex)
+#         heapify(self.data)
 
 ###########################################################
 
@@ -81,12 +81,12 @@ def dijkstra(graph: dict[int, dict[int, float]], start: int, pq_type: str) -> di
         prev[vertex] = None
     dist[start] = 0
 
-    if pq_type == "test":
-        H = TestMinPriorityQueue()
-    elif pq_type == "array":
+    if pq_type == "array":
         H = ArrayMinPriorityQueue()
     elif pq_type == "heap":
         H = HeapMinPriorityQueue()
+    # elif pq_type == "test":
+    #     H = TestMinPriorityQueue()
     else:
         raise NotImplementedError(f"No such heap type: {pq_type}")
     
@@ -102,13 +102,14 @@ def dijkstra(graph: dict[int, dict[int, float]], start: int, pq_type: str) -> di
 
 
 def assemble_path(prev: dict[int, int], start: int, end: int) -> list[int]:
+    # O(V) operation, shouldn't cause any issues
     path = []
     curr = end
     while curr != start:
         path.append(curr)
         curr = prev[curr]
     path.append(start)
-    return list(reversed(path))  # O(V) operation, shouldn't cause any issues
+    return list(reversed(path))
 
 
 def find_shortest_path_with_heap(
