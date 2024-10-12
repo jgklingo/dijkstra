@@ -9,7 +9,7 @@ class TestMinPriorityQueue:
             heappush(self.data, (dist[key], key))
     def pop_min(self) -> tuple[float, int]:
         return heappop(self.data)
-    def update_key(self, vertex, value) -> None:
+    def decrease_key(self, vertex, value) -> None:
         # O(n) operation only for testing purposes
         for i in range(len(self.data)):
             if self.data[i][1] == vertex:
@@ -26,7 +26,7 @@ class ArrayMinPriorityQueue:
     def pop_min(self) -> tuple[float, int]:
         min_element = min(self.data, key=lambda x: self.data[x])
         return (self.data.pop(min_element), min_element)
-    def update_key(self, vertex, value) -> None:
+    def decrease_key(self, vertex, value) -> None:
         self.data[vertex] = value
 
 
@@ -47,16 +47,20 @@ class HeapMinPriorityQueue:
         self.swap(0, len(self.data) - 1)
         minimum = self.data.pop()
         curr = 0
-        while (self.left(curr) < len(self.data) and (self.data[curr] > self.data[self.left(curr)]) or self.right(curr) < len(self.data) and self.data[curr] > self.data[self.right(curr)]):
-            if self.data[self.left(curr)] < self.data[self.right(curr)]:
+        while (self.left(curr) < len(self.data) and self.data[curr] > self.data[self.left(curr)]) or (self.right(curr) < len(self.data) and self.data[curr] > self.data[self.right(curr)]):
+            if self.right(curr) >= len(self.data) or self.data[self.left(curr)] <= self.data[self.right(curr)]:
                 self.swap(curr, self.left(curr))
                 curr = self.left(curr)
-            else:
+            elif self.left(curr) >= len(self.data) or self.data[self.left(curr)] > self.data[self.right(curr)]:
                 self.swap(curr, self.right(curr))
                 curr = self.right(curr)
         return minimum
-    def update_key(self, vertex, value) -> None:
-        pass
+    def decrease_key(self, vertex, value) -> None:
+        self.data[self.pointers[vertex]] = (value, vertex)
+        curr = self.pointers[vertex]
+        while self.data[curr] < self.data[self.parent(curr)]:
+                self.swap(curr, self.parent(curr))
+                curr = self.parent(curr)
     
     def swap(self, index1: int, index2: int) -> None:
         self.data[index1], self.data[index2] = self.data[index2], self.data[index1]
@@ -92,7 +96,7 @@ def dijkstra(graph: dict[int, dict[int, float]], start: int, pq_type: str) -> di
         for v in graph[u].keys():
             if dist[u] + graph[u][v] < dist[v]:
                 dist[v] = dist[u] + graph[u][v]
-                H.update_key(v, dist[v])
+                H.decrease_key(v, dist[v])
                 prev[v] = u
     return (dist, prev)
 
@@ -120,7 +124,7 @@ def find_shortest_path_with_heap(
         - the list of nodes (including `source` and `target`)
         - the cost of the path
     """
-    dist, prev = dijkstra(graph, source, "test")
+    dist, prev = dijkstra(graph, source, "heap")
     return (assemble_path(prev, source, target), dist[target])
 
 
@@ -141,17 +145,17 @@ def find_shortest_path_with_array(
     dist, prev = dijkstra(graph, source, "array")
     return (assemble_path(prev, source, target), dist[target])
 
-# tests
-testQueue = TestMinPriorityQueue()
-arrayQueue = ArrayMinPriorityQueue()
-heapQueue = HeapMinPriorityQueue()
-test_data = {0: .5, 1: .4, 2: .3, 3: .2, 4: .1}
-testQueue.make_queue(test_data)
-arrayQueue.make_queue(test_data)
-heapQueue.make_queue(test_data)
-print("test:", testQueue.data)
-print("heap:", heapQueue.data)
-print("ref:", heapQueue.pointers)
-while testQueue.data:
-    print("test:", testQueue.pop_min())
-    print("heap:", heapQueue.pop_min())
+# # tests
+# testQueue = TestMinPriorityQueue()
+# arrayQueue = ArrayMinPriorityQueue()
+# heapQueue = HeapMinPriorityQueue()
+# test_data = {0: .5, 1: .4, 2: .3, 3: .2, 4: .1}
+# testQueue.make_queue(test_data)
+# arrayQueue.make_queue(test_data)
+# heapQueue.make_queue(test_data)
+# print("test:", testQueue.data)
+# print("heap:", heapQueue.data)
+# print("ref:", heapQueue.pointers)
+# while testQueue.data:
+#     print("test:", testQueue.pop_min())
+#     print("heap:", heapQueue.pop_min())
