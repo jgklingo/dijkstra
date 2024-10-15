@@ -88,7 +88,7 @@ def dijkstra(graph: dict[int, dict[int, float]], start: int, pq_type: str) -> di
     # elif pq_type == "test":
     #     H = TestMinPriorityQueue()
     else:
-        raise NotImplementedError(f"No such heap type: {pq_type}")
+        raise NotImplementedError(f"No such priority queue type: {pq_type}")
     
     H.make_queue(dist)
     while H.data:
