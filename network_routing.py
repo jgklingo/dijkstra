@@ -22,7 +22,7 @@ class ArrayMinPriorityQueue:
     def __init__(self) -> None:
         self.data = {}
     def make_queue(self, dist) -> None:
-        self.data = dist.copy()
+        self.data = dist.copy()  # O(n) operation
     def pop_min(self) -> tuple[float, int]:
         min_element = min(self.data, key=lambda x: self.data[x])
         return (self.data.pop(min_element), min_element)
